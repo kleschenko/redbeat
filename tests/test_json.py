@@ -11,7 +11,6 @@ from redbeat.schedules import rrule
 
 
 class JSONTestCase(TestCase):
-
     def dumps(self, d):
         return json.dumps(d, cls=RedBeatJSONEncoder)
 
@@ -88,7 +87,6 @@ class JSONTestCase(TestCase):
 
 
 class RedBeatJSONEncoderTestCase(JSONTestCase):
-
     def test_datetime(self):
         dt = datetime.now()
         result = self.dumps(dt)
@@ -115,7 +113,7 @@ class RedBeatJSONEncoderTestCase(JSONTestCase):
             dtstart=datetime(2015, 12, 30, 12, 59, 22, tzinfo=timezone.utc),
             until=datetime(2015, 12, 31, 12, 59, 22, tzinfo=timezone.utc),
             count=1,
-            )
+        )
         result = self.dumps(r)
         self.assertEqual(json.loads(result), self.rrule())
 
@@ -150,7 +148,7 @@ class RedBeatJSONEncoderTestCase(JSONTestCase):
             dateutil_rrule.WEEKLY,
             dtstart=datetime(2015, 12, 30, 12, 59, 22, tzinfo=timezone.utc),
             until=datetime(2015, 12, 31, 12, 59, 22, tzinfo=timezone.utc),
-            byweekday=(dateutil_rrule.MO, dateutil_rrule.WE, dateutil_rrule.FR)
+            byweekday=(dateutil_rrule.MO, dateutil_rrule.WE, dateutil_rrule.FR),
         )
         result = self.dumps(r)
         self.assertEqual(
@@ -179,12 +177,11 @@ class RedBeatJSONEncoderTestCase(JSONTestCase):
                 'byhour': None,
                 'byminute': None,
                 'bysecond': None,
-            }
+            },
         )
 
 
 class RedBeatJSONDecoderTestCase(JSONTestCase):
-
     def test_datetime(self):
         d = self.datetime()
 
@@ -217,8 +214,10 @@ class RedBeatJSONDecoderTestCase(JSONTestCase):
         d.pop('__type__')
         self.assertEqual(
             result,
-            rrule('MINUTELY', dtstart=datetime(2015, 12, 30, 12, 59, 22, tzinfo=timezone.utc), count=1),
-            )
+            rrule(
+                'MINUTELY', dtstart=datetime(2015, 12, 30, 12, 59, 22, tzinfo=timezone.utc), count=1
+            ),
+        )
 
     def test_weekday(self):
         d = self.weekday()

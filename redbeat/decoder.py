@@ -3,17 +3,17 @@
 import calendar
 from datetime import datetime
 
-try:
-    import simplejson as json
-except ImportError:
-    import json
-
-from celery.schedules import schedule, crontab
+from celery.schedules import crontab, schedule
 from celery.utils.time import timezone
 from dateutil.rrule import weekday
 from pytz import FixedOffset
 
 from .schedules import rrule
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 
 def to_timestamp(dt):
@@ -26,8 +26,7 @@ def get_utcoffset_minutes(dt):
     utcoffset = dt.utcoffset()
 
     # Python 3: utcoffset / timedelta(minutes=1)
-    return utcoffset.total_seconds() / 60 \
-        if utcoffset else 0
+    return utcoffset.total_seconds() / 60 if utcoffset else 0
 
 
 def from_timestamp(seconds, tz_minutes=0):
@@ -60,8 +59,7 @@ class RedBeatJSONDecoder(json.JSONDecoder):
 
         if objtype == 'rrule':
             # Decode timestamp values into datetime objects
-            for key, tz_key in [
-                    ('dtstart', 'dtstart_tz'), ('until', 'until_tz')]:
+            for key, tz_key in [('dtstart', 'dtstart_tz'), ('until', 'until_tz')]:
                 timestamp = d.get(key)
                 tz_minutes = d.pop(tz_key, 0)
                 if timestamp is not None:
@@ -111,7 +109,7 @@ class RedBeatJSONEncoder(json.JSONEncoder):
                 'byweekday': obj.byweekday,
                 'byhour': obj.byhour,
                 'byminute': obj.byminute,
-                'bysecond': obj.bysecond
+                'bysecond': obj.bysecond,
             }
 
             # Convert datetime objects to timestamps

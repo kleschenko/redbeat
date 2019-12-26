@@ -5,7 +5,6 @@ from redbeat.schedulers import to_timestamp, from_timestamp
 
 
 class Test_utils(RedBeatCase):
-
     def test_roundtrip(self):
         now = self.app.now()
         # 3.x returns naive, but 4.x returns aware
